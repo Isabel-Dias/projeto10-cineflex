@@ -1,34 +1,46 @@
 import styled from "styled-components"
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
+import { useState, useEffect } from "react";
+
 
 export default function SessionsPage() {
+    const [sessions, setSessions] = useState([]);
+    const params = useParams();
+    const { idFilme } = params;
+
+    const config = {
+        headers: {
+            "Authorization": "L1tQ0XU9l1CXlCYOvMtwa96V"
+        }
+    }
+    console.log("ses", sessions);
+    useEffect(() => {
+        const promise = axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/movies/${idFilme}/showtimes`, config);
+
+        promise.then(p => {
+            setSessions(p.data)
+        });
+    }, []);
 
     return (
         <PageContainer>
             Selecione o horário
             <div>
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
-
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
-
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
+                {sessions?.days?.map(session => (
+                    <SessionContainer key={session.id}>
+                        {session.weekday} - {session.date}
+                        <ButtonsContainer>
+                            <Link to={`/assentos/${session.showtimes[0].id}`}>
+                                <button key={session.showtimes[0].id}>{session.showtimes[0].name}</button>
+                            </Link>
+                            <Link to={`/assentos/${session.showtimes[1].id}`}>
+                                <button key={session.showtimes[1].id}>{session.showtimes[1].name}</button>
+                            </Link>
+                        </ButtonsContainer>
+                    </SessionContainer>
+                ))
+                }
             </div>
 
             <FooterContainer>

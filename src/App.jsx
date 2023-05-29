@@ -4,20 +4,38 @@ import SeatsPage from "./pages/SeatsPage/SeatsPage"
 import SessionsPage from "./pages/SessionsPage/SessionsPage"
 import SuccessPage from "./pages/SuccessPage/SuccessPage"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 
 export default function App() {
     const [movies, setMovies] = useState([]);
+    
+    
+    const config = {
+        headers: {
+            "Authorization": "L1tQ0XU9l1CXlCYOvMtwa96V"
+        }
+    }
+    
+    useEffect(() => {
+		const promise = axios.get("https://mock-api.driven.com.br/api/v8/cineflex/movies", config);
+
+		promise.then(p => {
+			setMovies(p.data)
+		});
+	}, []); 
+
+
     return (
         <>
             <BrowserRouter>
                 <NavContainer>CINEFLEX</NavContainer>
                 <Routes>
-                    <Route path='/' element={<HomePage movies={movies} setMovies={setMovies} />}/>
-                    <Route path='/Seats' element={<SeatsPage />}/>
-                    <Route path='/Sessions' element={<SessionsPage />}/>
-                    <Route path='/Success' element={<SuccessPage />}/>
+                    <Route path='/' element={<HomePage movies={movies} />}/>
+                    <Route path='/assentos/:idSessao' element={<SeatsPage />}/>
+                    <Route path='/sessoes/:idFilme' element={<SessionsPage />}/>
+                    <Route path='/sucesso' element={<SuccessPage />}/>
                 </Routes>
             </BrowserRouter>  
         </>

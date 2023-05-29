@@ -14,7 +14,6 @@ export default function SessionsPage() {
             "Authorization": "L1tQ0XU9l1CXlCYOvMtwa96V"
         }
     }
-    console.log("ses", sessions);
     useEffect(() => {
         const promise = axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/movies/${idFilme}/showtimes`, config);
 
@@ -45,10 +44,10 @@ export default function SessionsPage() {
 
             <FooterContainer>
                 <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
+                    <img src={sessions.posterURL} alt="poster" />
                 </div>
                 <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
+                    <p>{sessions.title}</p>
                 </div>
             </FooterContainer>
 

@@ -24,8 +24,9 @@ export default function App() {
 		promise.then(p => {
 			setMovies(p.data)
 		});
-	}, []); 
-
+	
+    }, []); 
+    
 
     return (
         <>

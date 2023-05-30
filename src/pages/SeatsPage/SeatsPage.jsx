@@ -5,9 +5,30 @@ import axios from "axios";
 
 export default function SeatsPage() {
     const [seats, setSeats] = useState([]);
-    const [color, setColor] = useState("lightblue");
     const params = useParams();
     const { idSessao } = params;
+    const [selectedSeats, setSelectedSeats] = useState([]);
+
+    function selectSeats(selectedSeatID) {
+        
+        let newSeats = [];
+
+        if (!selectedSeats.includes(selectedSeatID)) {
+            newSeats = [...selectedSeats, selectedSeatID]
+            setSelectedSeats(newSeats)
+        }
+
+        seats.seats.forEach(seat => {
+            if (seat.id == selectedSeatID && seat.isAvailable == true) {
+                seat.isAvailable = 'selected'
+            } else if (seat.id == selectedSeatID && seat.isAvailable == 'selected') {
+                seat.isAvailable = true;
+                newSeats = [...selectedSeats]
+                newSeats.splice(seat.id);
+                setSelectedSeats(newSeats);
+            }
+        })
+    }
 
     const config = {
         headers: {
@@ -20,7 +41,9 @@ export default function SeatsPage() {
         promise.then(p => {
             setSeats(p.data)
         });
+
     }, []);
+
 
 
     return (
@@ -28,9 +51,10 @@ export default function SeatsPage() {
             Selecione o(s) assento(s)
             <SeatsContainer>
                 {seats?.seats?.map(seat => (
-                    <SeatItem key={seat.id} color={seat.isAvailable == true ? "#C3CFD9" : "#FBE192"} 
-                        border={seat.isAvailable == true ? "#808F9D" : "#F7C52B"}
-                        >
+                    <SeatItem key={seat.id} onClick={() => { selectSeats(seat.id) }}
+                        color={seat.isAvailable == true ? "#C3CFD9" : seat.isAvailable == false ? "#FBE192" : "#1AAE9E"}
+                        border={seat.isAvailable == true ? "#808F9D" : seat.isAvailable == false ? "#F7C52B" : "#0E7D71"}
+                    >
                         {seat.name}
                     </SeatItem>
                 ))}
@@ -38,15 +62,15 @@ export default function SeatsPage() {
 
             <CaptionContainer>
                 <CaptionItem>
-                    <CaptionCircle color="#1AAE9E" border="#0E7D71"/>
+                    <CaptionCircle color="#1AAE9E" border="#0E7D71" />
                     Selecionado
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle color="#C3CFD9" border="#808F9D"/>
+                    <CaptionCircle color="#C3CFD9" border="#808F9D" />
                     Disponível
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle color="#FBE192" border="#F7C52B"/>
+                    <CaptionCircle color="#FBE192" border="#F7C52B" />
                     Indisponível
                 </CaptionItem>
             </CaptionContainer>
@@ -146,6 +170,9 @@ const SeatItem = styled.div`
     align-items: center;
     justify-content: center;
     margin: 5px 3px;
+    &:hover {
+        cursor: ${props => props.color == "#FBE192" ? 'default' : 'pointer'}
+    }
 `
 const FooterContainer = styled.div`
     width: 100%;

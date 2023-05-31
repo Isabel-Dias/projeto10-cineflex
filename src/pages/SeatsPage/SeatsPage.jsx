@@ -1,21 +1,27 @@
 import styled from "styled-components"
-import { Link, useParams } from "react-router-dom";
+import { Form, Link, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function SeatsPage() {
+
+export default function SeatsPage(props) {
     const [seats, setSeats] = useState([]);
     const params = useParams();
     const { idSessao } = params;
-    const [selectedSeats, setSelectedSeats] = useState([]);
+    const navigate = useNavigate();
+    const {selectedSeats, setSelectedSeats, seatNames, setSeatNames, name, setName, cpf, setCpf, setMovieName, setSessionDate, setSessionTime} = props;
 
-    function selectSeats(selectedSeatID) {
-        
+
+    function selectSeats(selectedSeatID, selectedSeatName) {
+        const data = window.localStorage.getItem('Stored_Selected_Seats');
+        if ( data !== null ) setSelectedSeats(JSON.parse(data));
         let newSeats = [];
 
         if (!selectedSeats.includes(selectedSeatID)) {
             newSeats = [...selectedSeats, selectedSeatID]
-            setSelectedSeats(newSeats)
+            setSelectedSeats(newSeats);
+            setSeatNames([...seatNames, selectedSeatName]);
+            window.localStorage.setItem('Stored_Selected_Seats', JSON.stringify(selectedSeats));
         }
 
         seats.seats.forEach(seat => {
@@ -26,8 +32,27 @@ export default function SeatsPage() {
                 newSeats = [...selectedSeats]
                 newSeats.splice(seat.id);
                 setSelectedSeats(newSeats);
-            }
+            } 
         })
+    }
+
+    function reserveSeats(event) {
+        event.preventDefault();
+        
+        const reservationInfo = {
+            ids: selectedSeats,
+            name: name,
+            cpf: cpf
+        }
+
+
+        const promise = axios.post('https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many', reservationInfo, config)
+        promise.then(p => {
+            setMovieName(seats.movie.title); 
+            setSessionDate(seats.day.date);
+            setSessionTime(seats.name);
+            navigate('/sucesso')})
+        promise.catch(p => console.log(p.response))
     }
 
     const config = {
@@ -51,7 +76,7 @@ export default function SeatsPage() {
             Selecione o(s) assento(s)
             <SeatsContainer>
                 {seats?.seats?.map(seat => (
-                    <SeatItem key={seat.id} onClick={() => { selectSeats(seat.id) }}
+                    <SeatItem key={seat.id} onClick={() => { selectSeats(seat.id, seat.name)}}
                         color={seat.isAvailable == true ? "#C3CFD9" : seat.isAvailable == false ? "#FBE192" : "#1AAE9E"}
                         border={seat.isAvailable == true ? "#808F9D" : seat.isAvailable == false ? "#F7C52B" : "#0E7D71"}
                     >
@@ -74,16 +99,19 @@ export default function SeatsPage() {
                     Indisponível
                 </CaptionItem>
             </CaptionContainer>
+            <form onSubmit={reserveSeats}>
+                <FormContainer>
 
-            <FormContainer>
-                Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
+                    Nome do Comprador:
+                    <input onChange={e => setName(e.target.value)} required placeholder="Digite seu nome..." />
 
-                CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
+                    CPF do Comprador:
+                    <input onChange={e => setCpf(e.target.value)} type="number" required placeholder="Digite seu CPF..." />
+                    
+                    <button type="submit ">Reservar Assento(s)</button>
+                </FormContainer>
+            </form>
 
-                <button>Reservar Assento(s)</button>
-            </FormContainer>
 
             <FooterContainer>
                 <div>
@@ -127,6 +155,7 @@ const FormContainer = styled.div`
     align-items: flex-start;
     margin: 20px 0;
     font-size: 18px;
+    text-decoration: none;
     button {
         align-self: center;
     }

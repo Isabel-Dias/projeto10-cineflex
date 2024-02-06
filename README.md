@@ -38,8 +38,3 @@ Por fim, digite o seguinte comando no terminal:
 ```bash
   npm run dev
 ```
-
-    
-## Deployment
-
-Deploy feito através do com variáveis de ambiente configuradas de acordo com o .env.example. Para acessar, siga esse [link](https://shortly-api-0sf6.onrender.com).

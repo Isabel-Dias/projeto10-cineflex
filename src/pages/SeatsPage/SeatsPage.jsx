@@ -46,7 +46,7 @@ export default function SeatsPage(props) {
         }
 
 
-        const promise = axios.post('https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many', reservationInfo, config)
+        const promise = axios.post(`${import.meta.env.VITE_API_URL}seats/book-many`, reservationInfo, config)
         promise.then(p => {
             setMovieName(seats.movie.title); 
             setSessionDate(seats.day.date);
@@ -61,7 +61,7 @@ export default function SeatsPage(props) {
         }
     }
     useEffect(() => {
-        const promise = axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`, config);
+        const promise = axios.get(`${import.meta.env.VITE_API_URL}${idSessao}/seats`, config);
 
         promise.then(p => {
             setSeats(p.data)

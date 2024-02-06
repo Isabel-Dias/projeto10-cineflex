@@ -15,7 +15,7 @@ export default function SessionsPage() {
         }
     }
     useEffect(() => {
-        const promise = axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/movies/${idFilme}/showtimes`, config);
+        const promise = axios.get(`${import.meta.env.VITE_API_URL}movies/${idFilme}/showtimes`, config);
 
         promise.then(p => {
             setSessions(p.data)

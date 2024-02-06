@@ -38,3 +38,6 @@ Por fim, digite o seguinte comando no terminal:
 ```bash
   npm run dev
 ```
+## Deployment
+
+Deploy feito pelo site [Vercel](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiJyJfUvJeEAxW4lJUCHcERAC4QFnoECAgQAQ&url=https%3A%2F%2Fvercel.com%2F&usg=AOvVaw0IyxhwoD9uGvLBGqylHAlt&opi=89978449), configurando as variáveis de ambiente de acordo com o .env.example. Para acessar, siga esse [link](https://projeto10-cineflex-one-jet.vercel.app/).

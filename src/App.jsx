@@ -30,7 +30,7 @@ export default function App() {
 
   useEffect(() => {
     const promise = axios.get(
-      "https://mock-api.driven.com.br/api/v8/cineflex/movies",
+      `${import.meta.env.VITE_API_URL}movies`,
       config
     );
 

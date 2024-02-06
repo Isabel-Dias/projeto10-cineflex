@@ -22,7 +22,7 @@ export default function SeatsPage(props) {
     setSessionTime,
   } = props;
 
-  function setSeats(selectedSeatID, selectedSeatName) {
+  function populateSeats(selectedSeatID, selectedSeatName) {
     newSeats = [...selectedSeats, selectedSeatID];
     setSelectedSeats(newSeats);
     setSeatNames([...seatNames, selectedSeatName]);
@@ -49,7 +49,7 @@ export default function SeatsPage(props) {
     let newSeats = [];
 
     if (!selectedSeats.includes(selectedSeatID)) {
-      setSeats(selectedSeatID, selectedSeatName);
+      populateSeats(selectedSeatID, selectedSeatName);
     }
 
     seats.seats.forEach((seat) => {
